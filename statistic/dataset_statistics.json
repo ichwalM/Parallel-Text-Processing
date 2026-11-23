@@ -1,0 +1,28 @@
+{
+  "dataset_name": "PG-19 Language Modeling Benchmark Dataset",
+  "source": "Project Gutenberg / Bojan Tunguz (Kaggle)",
+  "total_files": 28752,
+  "total_bytes": 11737206770,
+  "total_gb": 10.9311,
+  "min_bytes": 100,
+  "min_kb": 0.1,
+  "max_bytes": 28933640,
+  "max_mb": 27.59,
+  "mean_bytes": 408222.27,
+  "mean_kb": 398.65,
+  "median_bytes": 316347.5,
+  "median_kb": 308.93,
+  "std_dev_bytes": 449098.82,
+  "std_dev_kb": 438.57,
+  "coefficient_of_variation_cv": 1.1001,
+  "size_disparity_ratio_max_min": 289336.4,
+  "percentiles_kb": {
+    "p10": 61.53,
+    "p25": 141.84,
+    "p50": 308.93,
+    "p75": 519.32,
+    "p90": 821.14,
+    "p95": 1053.87,
+    "p99": 1794.36
+  }
+}

@@ -1,0 +1,154 @@
+{
+  "full_dataset_11gb": [
+    {
+      "configuration": "Serial (Baseline 1 Core)",
+      "paradigm": "Serial",
+      "workers": 1,
+      "compute_parallel_sec": 167.216,
+      "comm_aggregation_sec": 0.0,
+      "total_execution_sec": 167.216,
+      "speedup": 1.0,
+      "efficiency_pct": 100.0,
+      "amdahl_theoretical_speedup": 1.0
+    },
+    {
+      "configuration": "OpenMP \u2014 4 Threads",
+      "paradigm": "OpenMP",
+      "workers": 4,
+      "compute_parallel_sec": 55.596,
+      "comm_aggregation_sec": 1.0581,
+      "total_execution_sec": 56.6541,
+      "speedup": 2.9515,
+      "efficiency_pct": 73.79,
+      "amdahl_theoretical_speedup": 3.63
+    },
+    {
+      "configuration": "OpenMP \u2014 16 Threads",
+      "paradigm": "OpenMP",
+      "workers": 16,
+      "compute_parallel_sec": 22.6105,
+      "comm_aggregation_sec": 1.9748,
+      "total_execution_sec": 24.5853,
+      "speedup": 6.8015,
+      "efficiency_pct": 42.51,
+      "amdahl_theoretical_speedup": 12.78
+    }
+  ],
+  "scaling_benchmark_sample": [
+    {
+      "paradigm": "Serial",
+      "workers": 1,
+      "compute_sec": 4.2918,
+      "agg_sec": 0.0,
+      "total_sec": 4.2918,
+      "speedup": 1.0,
+      "efficiency": 100.0,
+      "amdahl": 1.0
+    },
+    {
+      "paradigm": "OpenMP",
+      "workers": 1,
+      "compute_sec": 4.4545,
+      "agg_sec": 0.0,
+      "total_sec": 4.4545,
+      "speedup": 0.9635,
+      "efficiency": 96.35,
+      "amdahl": 1.0
+    },
+    {
+      "paradigm": "OpenMP",
+      "workers": 2,
+      "compute_sec": 2.3398,
+      "agg_sec": 0.0262,
+      "total_sec": 2.366,
+      "speedup": 1.814,
+      "efficiency": 90.7,
+      "amdahl": 1.9324
+    },
+    {
+      "paradigm": "OpenMP",
+      "workers": 4,
+      "compute_sec": 1.5875,
+      "agg_sec": 0.0705,
+      "total_sec": 1.6581,
+      "speedup": 2.5884,
+      "efficiency": 64.71,
+      "amdahl": 3.629
+    },
+    {
+      "paradigm": "OpenMP",
+      "workers": 8,
+      "compute_sec": 1.3579,
+      "agg_sec": 0.0763,
+      "total_sec": 1.4342,
+      "speedup": 2.9925,
+      "efficiency": 37.41,
+      "amdahl": 6.432
+    },
+    {
+      "paradigm": "OpenMP",
+      "workers": 16,
+      "compute_sec": 0.7171,
+      "agg_sec": 0.0994,
+      "total_sec": 0.8165,
+      "speedup": 5.2563,
+      "efficiency": 32.85,
+      "amdahl": 10.498
+    },
+    {
+      "paradigm": "MPI",
+      "workers": 1,
+      "compute_sec": 4.3025,
+      "agg_sec": 0.0,
+      "total_sec": 4.3025,
+      "speedup": 0.9975,
+      "efficiency": 99.75,
+      "amdahl": 1.0
+    },
+    {
+      "paradigm": "MPI",
+      "workers": 2,
+      "compute_sec": 2.4798,
+      "agg_sec": 0.044,
+      "total_sec": 2.5238,
+      "speedup": 1.7005,
+      "efficiency": 85.03,
+      "amdahl": 1.9324
+    },
+    {
+      "paradigm": "MPI",
+      "workers": 4,
+      "compute_sec": 1.2606,
+      "agg_sec": 0.1063,
+      "total_sec": 1.3669,
+      "speedup": 3.1398,
+      "efficiency": 78.5,
+      "amdahl": 3.629
+    },
+    {
+      "paradigm": "MPI",
+      "workers": 8,
+      "compute_sec": 0.7966,
+      "agg_sec": 0.1734,
+      "total_sec": 0.97,
+      "speedup": 4.4245,
+      "efficiency": 55.31,
+      "amdahl": 6.432
+    }
+  ],
+  "hardware_environment": {
+    "cpu": "Intel Core i7-14700HX (20 Core / 28 Thread)",
+    "cores": {
+      "p_cores": 8,
+      "e_cores": 12
+    },
+    "ram": "16 GB DDR5",
+    "l3_cache": "33 MB Intel Smart Cache",
+    "os": "Linux x86_64"
+  },
+  "amdahl_parameters": {
+    "parallel_fraction_f": 0.965,
+    "serial_fraction_1_minus_f": 0.035,
+    "theoretical_max_speedup": 28.57
+  }
+}
