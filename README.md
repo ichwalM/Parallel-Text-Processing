@@ -454,6 +454,13 @@ Speedup (S)
           1          2         4         8            16   Threads / Processes (p)
 ```
 
+> [!TIP]
+> **Artefak Visualisasi & Generator Statistik:**  
+> Seluruh grafik visualisasi beresolusi tinggi (300 DPI PNG), data metrik dalam format CSV dan JSON, serta skrip generator Python tersimpan di direktori [`statistic/`](statistic/README.md). Anda dapat meregenerasi seluruh artefak statistik dengan menjalankan:
+> ```bash
+> python3 statistic/generate_statistics.py
+> ```
+
 ---
 
 ## 🔬 Analisis Teoretis: Hukum Amdahl & Bottleneck Perangkat Keras
@@ -544,6 +551,19 @@ Komputasi-Pararel-2026/
 │   ├── serial
 │   ├── openmp
 │   └── mpi_wordcount
+├── statistic/                # Artefak statistik pengujian & visualisasi performa (Python)
+│   ├── generate_statistics.py# Generator data CSV/JSON & grafik resolusi tinggi (300 DPI)
+│   ├── benchmark_metrics.csv # Metrik benchmark performa (CSV)
+│   ├── benchmark_metrics.json# Metrik benchmark performa (JSON)
+│   ├── dataset_statistics.json# Statistik detail ukuran korpus PG-19
+│   ├── dataset_distribution.csv# Distribusi ukuran file buku
+│   ├── top_words.csv         # Top frekuensi kata kunci (Top 50)
+│   ├── speedup_comparison.png# Grafik Speedup: Linear vs Amdahl vs OpenMP vs MPI
+│   ├── execution_time_breakdown.png# Grafik Breakdown Waktu: Komputasi vs Agregasi
+│   ├── efficiency_curve.png  # Grafik Kurva Efisiensi Paralel (%)
+│   ├── dataset_distribution.png# Grafik Distribusi Ukuran Buku (Bukti P2)
+│   ├── top_words_bar.png     # Grafik Bar Chart Top Kata Kunci Korpus
+│   └── README.md             # Dokumentasi folder statistik
 ├── Dataset/                  # Direktori data korpus (diabaikan git via .gitignore)
 │   ├── archive.zip           # Berkas kompresi PG-19 (Kaggle)
 │   ├── pg19/                 # Ekstraksi partisi asli (train, test, validation)

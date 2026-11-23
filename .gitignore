@@ -4,6 +4,7 @@ Dataset/
 *.tar.gz
 *.7z
 *.csv
+!statistic/*.csv
 
 build/
 *.o

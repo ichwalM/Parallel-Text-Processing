@@ -1,0 +1,14 @@
+test_type,paradigm,workers,compute_parallel_sec,comm_aggregation_sec,total_execution_sec,speedup,efficiency_pct,amdahl_theoretical_speedup
+Full PG-19 (11 GB),Serial,1,167.216,0.0,167.216,1.0,100.0,1.0
+Full PG-19 (11 GB),OpenMP,4,55.596,1.0581,56.6541,2.9515,73.79,3.63
+Full PG-19 (11 GB),OpenMP,16,22.6105,1.9748,24.5853,6.8015,42.51,12.78
+Controlled Sample,Serial,1,4.2918,0.0,4.2918,1.0,100.0,1.0
+Controlled Sample,OpenMP,1,4.4545,0.0,4.4545,0.9635,96.35,1.0
+Controlled Sample,OpenMP,2,2.3398,0.0262,2.366,1.814,90.7,1.9324
+Controlled Sample,OpenMP,4,1.5875,0.0705,1.6581,2.5884,64.71,3.629
+Controlled Sample,OpenMP,8,1.3579,0.0763,1.4342,2.9925,37.41,6.432
+Controlled Sample,OpenMP,16,0.7171,0.0994,0.8165,5.2563,32.85,10.498
+Controlled Sample,MPI,1,4.3025,0.0,4.3025,0.9975,99.75,1.0
+Controlled Sample,MPI,2,2.4798,0.044,2.5238,1.7005,85.03,1.9324
+Controlled Sample,MPI,4,1.2606,0.1063,1.3669,3.1398,78.5,3.629
+Controlled Sample,MPI,8,0.7966,0.1734,0.97,4.4245,55.31,6.432
