@@ -112,6 +112,13 @@ Pengukuran langsung terhadap seluruh 28.752 file korpus menghasilkan profil stat
 | **Koefisien Variasi ($CV$)** | **1,10** | **Variansi beban sangat tinggi ($CV > 1$)** |
 | **Rasio Ukuran Ekstrem** | **289.336 : 1** | Bukti mutlak perlunya **Dynamic Scheduling** |
 
+![Distribusi Ukuran File PG-19](statistic/dataset_distribution.png)
+
+> **📊 Interpretasi Statistik & Verifikasi Hipotesis H2 (Menjawab Q2):**  
+> Visualisasi histogram logaritmik dan kurva Cumulative Distribution Function (CDF) dari 28.752 file korpus PG-19 di atas secara visual membuktikan terjadinya skewness ekstrem ke arah kanan (*heavy-tailed right-skewed distribution*).  
+> - **Disparitas Ekstrem:** Rentang ukuran file dari **100 B** hingga **28,93 MB** (faktor perbedaan 289.000×) dengan koefisien variasi $CV = 1{,}10$ membuktikan bahwa beban komputasi per unit file sangat asimetris.  
+> - **Konfirmasi H2:** Pembagian kerja statis berbasis blok ($N/p$) dipastikan gagal mendistribusikan beban secara merata. Sebaliknya, mekanisme `schedule(dynamic, 4)` pada OpenMP berhasil menyeimbangkan antrean kerja secara adaptif saat thread meminta potongan pekerjaan baru secara dinamis.
+
 > [!NOTE]
 > **Klarifikasi Referensi Awal "Sample CSV Files":**  
 > Pada slide 8 Canva terdapat catatan mengenai *"Sample CSV Files"*. Catatan tersebut merefleksikan pengujian awal tim menggunakan arsip dataset organisasi dan produk (`Dataset_temp/organizations-2000000.zip` dan `products-2000000.zip`). Namun, untuk menguji batas skala komputasi paralel sesungguhnya, tim beralih **100% secara penuh** ke korpus buku Gutenberg PG-19 (11 GB, 28.752 file `.txt`).
@@ -400,22 +407,34 @@ Pengujian dilakukan pada seluruh 28.752 file korpus PG-19 menggunakan prosesor I
 * **Kosakata Kata Unik (*Distinct Vocabulary*):** **2.576.276 kata unik**
 * **Total Ukuran Data Diproses:** **10,93 GB** (11.737.206.770 byte)
 
-#### Top 10 Kata Kunci Hasil Pemrosesan Korpus PG-19
+#### Top 15 Kata Kunci Hasil Pemrosesan Korpus PG-19
 
 Hasil penghitungan frekuensi kata teratas menunjukkan konsistensi deterministik **100% identik** di antara ketiga implementasi (Serial, OpenMP, dan MPI):
 
-| Peringkat | Kata (*Word*) | Total Frekuensi Kemunculan |
-| :---: | :--- | :---: |
-| 1. | `old` | **2.017.397** |
-| 2. | `life` | **1.801.788** |
-| 3. | `himself` | **1.686.102** |
-| 4. | `place` | **1.452.292** |
-| 5. | `house` | **1.413.893** |
-| 6. | `small` | **1.383.894** |
-| 7. | `people` | **1.381.226** |
-| 8. | `last` | **1.379.214** |
-| 9. | `yet` | **1.376.407** |
-| 10. | `hand` | **1.341.519** |
+| Peringkat | Kata (*Word*) | Total Frekuensi Kemunculan | Proporsi terhadap Korpus |
+| :---: | :--- | :---: | :---: |
+| 1. | `old` | **2.017.397** | 0,229% |
+| 2. | `life` | **1.801.788** | 0,205% |
+| 3. | `himself` | **1.686.102** | 0,192% |
+| 4. | `place` | **1.452.292** | 0,165% |
+| 5. | `house` | **1.413.893** | 0,161% |
+| 6. | `small` | **1.383.894** | 0,157% |
+| 7. | `people` | **1.381.226** | 0,157% |
+| 8. | `last` | **1.379.214** | 0,157% |
+| 9. | `yet` | **1.376.407** | 0,156% |
+| 10. | `hand` | **1.341.519** | 0,152% |
+| 11. | `away` | **1.322.022** | 0,150% |
+| 12. | `though` | **1.312.322** | 0,149% |
+| 13. | `three` | **1.304.647** | 0,148% |
+| 14. | `thought` | **1.292.543** | 0,147% |
+| 15. | `another` | **1.250.017** | 0,142% |
+
+![Top Kata Kunci PG-19](statistic/top_words_bar.png)
+
+> **📊 Interpretasi Hasil & Verifikasi Hipotesis H1 (Menjawab Q1):**  
+> Visualisasi grafik batang horizontal di atas menampilkan 15 kata dengan frekuensi kemunculan tertinggi dari total **880.026.908 kata** dalam korpus PG-19.  
+> - **Integritas & Determinisme Algoritma:** Hasil penghitungan frekuensi kata teratas, jumlah total kata valid, dan jumlah kosakata unik (2.576.276) terbukti **100% konsisten dan identik** di ketiga implementasi (Serial, OpenMP, dan MPI).  
+> - **Konfirmasi H1:** Paralelisasi berhasil mengakselerasi komputasi secara masif tanpa menimbulkan anomali *race condition* atau deviasi data sedikit pun.
 
 #### Tabel Kinerja Skala Penuh (Full 11 GB)
 
@@ -433,26 +452,38 @@ Hasil penghitungan frekuensi kata teratas menunjukkan konsistensi deterministik 
 
 ### B. Analisis Skalabilitas Multi-Konfigurasi & Breakdown Fase
 
-Untuk memetakan kurva skalabilitas secara mendalam pada rentang variasi thread dan proses ($p = 1, 2, 4, 8, 16$), dilakukan pengujian terkontrol (*controlled scalability benchmark*) dengan isolasi fase komputasi dan fase agregasi:
+Untuk memetakan kurva skalabilitas secara mendalam pada rentang variasi thread dan proses ($p = 1, 2, 4, 8, 16$), dilakukan pengujian terkontrol (*controlled scalability benchmark*) dengan isolasi fase komputasi dan fase agregasi sebagaimana tersimpan pada [`statistic/benchmark_metrics.csv`](statistic/benchmark_metrics.csv):
 
-| Konfigurasi Worker | Waktu Compute / Parallel | Waktu Comm / Agregasi | Total Waktu Eksekusi | Speedup ($S$) | Efisiensi ($E$) |
-| :--- | :---: | :---: | :---: | :---: | :---: |
-| **Serial Baseline** | 4,2918 s | 0,0000 s | **4,2918 s** | **1,00×** | **100,0%** |
-| **OpenMP — 1 Thread** | 4,4545 s | 0,0000 s | **4,4545 s** | 0,96× | 96,3% |
-| **OpenMP — 2 Thread** | 2,3398 s | 0,0262 s | **2,3660 s** | **1,81×** | **90,7%** |
-| **OpenMP — 4 Thread** | 1,5875 s | 0,0705 s | **1,6581 s** | **2,59×** | **64,7%** |
-| **OpenMP — 8 Thread** | 1,3579 s | 0,0763 s | **1,4342 s** | **2,99×** | **37,4%** |
-| **OpenMP — 16 Thread** | 0,7171 s | 0,0994 s | **0,8165 s** | **5,26×** | **32,9%** |
-| **MPI — 1 Process** | 4,3025 s | 0,0000 s | **4,3025 s** | **1,00×** | **99,8%** |
-| **MPI — 2 Process** | 2,4798 s | 0,0440 s | **2,5238 s** | **1,70×** | **85,0%** |
-| **MPI — 4 Process** | 1,2606 s | 0,1063 s | **1,3669 s** | **3,14×** | **78,5%** |
-| **MPI — 8 Process** | 0,7966 s | 0,1734 s | **0,9700 s** | **4,42×** | **55,3%** |
+| Paradigma / Konfigurasi | Worker ($p$) | Waktu Compute / Parallel | Waktu Comm / Agregasi | Total Waktu Eksekusi | Speedup ($S$) | Efisiensi ($E$) | Batas Speedup Amdahl |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| **Serial Baseline** | 1 | 4,2918 s | 0,0000 s | **4,2918 s** | **1,00×** | **100,0%** | 1,00× |
+| **OpenMP** | 1 Thread | 4,4545 s | 0,0000 s | **4,4545 s** | 0,96× | 96,3% | 1,00× |
+| **OpenMP** | 2 Thread | 2,3398 s | 0,0262 s | **2,3660 s** | **1,81×** | **90,7%** | 1,93× |
+| **OpenMP** | 4 Thread | 1,5875 s | 0,0705 s | **1,6581 s** | **2,59×** | **64,7%** | 3,63× |
+| **OpenMP** | 8 Thread | 1,3579 s | 0,0763 s | **1,4342 s** | **2,99×** | **37,4%** | 6,43× |
+| **OpenMP** | 16 Thread | 0,7171 s | 0,0994 s | **0,8165 s** | **5,26×** | **32,9%** | 10,50× |
+| **MPI** | 1 Process | 4,3025 s | 0,0000 s | **4,3025 s** | **1,00×** | **99,8%** | 1,00× |
+| **MPI** | 2 Process | 2,4798 s | 0,0440 s | **2,5238 s** | **1,70×** | **85,0%** | 1,93× |
+| **MPI** | 4 Process | 1,2606 s | 0,1063 s | **1,3669 s** | **3,14×** | **78,5%** | 3,63× |
+| **MPI** | 8 Process | 0,7966 s | 0,1734 s | **0,9700 s** | **4,42×** | **55,3%** | 6,43× |
 
 ---
 
 ### C. Visualisasi Grafik Performa (Speedup Aktual vs Linear Ideal)
 
-Visualisasi grafik perbandingan Speedup aktual OpenMP dan MPI terhadap garis percepatan linear teoritis ideal ($S = p$):
+![Perbandingan Speedup](statistic/speedup_comparison.png)
+
+> **📈 Interpretasi Speedup & Verifikasi Hipotesis H1 & H4 (Menjawab Q1 & Q4):**  
+> Grafik perbandingan kurva percepatan (*Speedup*) di atas menunjukkan lintasan performa OpenMP dan MPI terhadap Garis Linear Ideal ($S = p$) dan Kurva Batas Teoretis Hukum Amdahl ($f = 96{,}5\%$).  
+> - **Akselerasi Kuat (2 s.d. 8 Worker):** Percepatan melonjak tajam pada rentang 2 hingga 8 thread/proses, memanfaatkan 8 Performance Cores secara optimal (mencapai Speedup 2,99× pada OpenMP 8T dan 4,42× pada MPI 8P).  
+> - **Titik Jenuh & Penurunan Linearitas:** Pada 16 thread, kurva percepatan mulai melandai (OpenMP mencapai **6,80× pada dataset penuh** dan **5,26× pada sampel terkontrol**) di bawah kurva ideal linear, membuktikan prediksi **H4**.
+
+![Breakdown Waktu Eksekusi](statistic/execution_time_breakdown.png)
+
+> **⏱️ Interpretasi Overhead Komputasi & Verifikasi Hipotesis H3 (Menjawab Q3):**  
+> Grafik dekomposisi waktu (*stacked bar chart*) di atas membedah proporsi fase komputasi paralel (*Compute Phase*) terhadap fase sinkronisasi, komunikasi, dan penggabungan (*Aggregation / Comm Phase*).  
+> - **Efisiensi Shared-Memory (OpenMP):** Pada OpenMP, waktu fase agregasi penggabungan *hash map* lokal bebas kunci hanya menyerap ~1–2 detik pada dataset penuh dan < 0,10 detik pada sampel (< 4% total waktu), membuktikan keunggulan *lock-free pointer move*.  
+> - **Biaya Distributed-Memory (MPI):** Pada MPI, fase *Comm + Aggregation* bertumbuh secara monoton seiring penambahan jumlah proses ($p=1: 0{,}00\text{s} \to p=8: 0{,}1734\text{s}$), memvalidasi **H3** bahwa komunikasi *message passing*, serialisasi buffer string, dan deserialisasi di Rank 0 menimbulkan beban tambahan yang tidak dijumpai pada model memori bersama.
 
 ```text
 Speedup (S)
@@ -514,6 +545,13 @@ Fraksi paralel program adalah $f \approx 98,31\%$. Berdasarkan Hukum Amdahl, bat
 $$S_{\text{max}} = \lim_{p \to \infty} \frac{1}{(1 - f) + \frac{f}{p}} = \frac{1}{1 - f} = \frac{1}{0,01689} \approx \mathbf{59,20\times}$$
 
 Meskipun fraksi serial hanya ~1,7% (yang secara teoritis mengizinkan speedup hingga ~14× pada 16 thread), percepatan riil pada 16 thread tercatat sebesar **6,80×**. Perbedaan ini disebabkan oleh faktor fisik perangkat keras di bawah ini.
+
+![Kurva Efisiensi Paralel](statistic/efficiency_curve.png)
+
+> **📉 Interpretasi Efisiensi Paralel & Verifikasi Hipotesis H4 (Menjawab Q4):**  
+> Kurva efisiensi ($E = \frac{S}{p} \times 100\%$) di atas menggambarkan efektivitas pemanfaatan daya komputasi dari setiap *worker* tambahan:  
+> - **Efisiensi Tinggi pada Skala Rendah:** Pada 1–2 worker, efisiensi berada pada tingkat sangat tinggi (~90%–96%). Pada 4 thread/proses, efisiensi masih terjaga kuat di angka **73,8% (skala penuh)** dan **78,5% (MPI 4P)**.  
+> - **Degradasi pada Skala Tinggi (Menjawab Q4):** Efisiensi mengalami penurunan bertahap menjadi 42,5% (skala penuh) dan 32,9% (sampel terkontrol) pada 16 threads. Hal ini mengonfirmasi **H4** bahwa keterlibatan *Efficiency Cores* (yang berkecepatan 3,9 GHz vs P-Core 5,5 GHz), saturasi bus memori DDR5, dan persaingan cache L3 menjadi faktor fisik utama yang membatasi efisiensi paralel pada skala tinggi.
 
 ### 2. Empat Faktor Kunci Bottleneck Fisik Hardware (Sesuai Slide 11 Canva)
 
