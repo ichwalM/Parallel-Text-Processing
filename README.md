@@ -67,6 +67,28 @@ Penambahan jumlah core/thread tidak menghasilkan percepatan ideal linear ($S(p) 
 
 ---
 
+## ❓ Pertanyaan Penelitian (Research Questions)
+
+Agar tetap memiliki benang merah dengan rumusan masalah P1–P4, pertanyaan yang ingin dijawab melalui eksperimen ini disusun menjadi empat fokus utama:
+
+- **Q1 (Percepatan Eksekusi):** Seberapa besar penurunan waktu eksekusi dan peningkatan *speedup* yang dihasilkan oleh implementasi paralel OpenMP dan MPI dibandingkan eksekusi serial saat memproses seluruh korpus PG-19 (28.752 file / 11 GB)?
+- **Q2 (Keseimbangan Beban):** Bagaimana efektivitas *dynamic scheduling* pada OpenMP dan distribusi siklik (*round-robin*) pada MPI dalam meredam ketidakseimbangan beban kerja (*load imbalance*) akibat ukuran file buku yang tidak seragam?
+- **Q3 (Dampak Overhead Agregasi & Komunikasi):** Seberapa besar proporsi waktu yang terserap pada fase penggabungan *hash map* lokal (OpenMP) serta serialisasi dan pengiriman data *message passing* (MPI) terhadap total waktu eksekusi?
+- **Q4 (Skalabilitas & Batas Efisiensi):** Mengapa *speedup* tidak meningkat secara linear seiring penambahan *thread/process*, dan pada konfigurasi berapa efisiensi ($E$) mulai mengalami penurunan signifikan pada prosesor *hybrid* Intel Core i7-14700HX?
+
+---
+
+## 💡 Hipotesis Awal (Hypotheses)
+
+Keempat hipotesis berikut menjadi dugaan terukur yang dibuktikan melalui data benchmark empiris:
+
+- **H1 (Efektivitas Paralelisasi):** Kedua pendekatan paralel (OpenMP dan MPI) akan memangkas waktu eksekusi secara signifikan dibanding eksekusi serial, sekaligus mempertahankan akurasi data 100% identik (total kata, jumlah kata unik, dan daftar Top-10 kata kunci sama persis).
+- **H2 (Adaptivitas Penjadwalan):** Mekanisme `schedule(dynamic, 4)` pada OpenMP akan menghasilkan distribusi beban komputasi yang lebih seimbang dibandingkan distribusi siklik statis pada MPI ketika menghadapi variasi ukuran file buku yang ekstrem.
+- **H3 (Perbandingan Overhead OpenMP vs MPI):** Pada jumlah *worker* yang setara, OpenMP diprediksi memiliki total waktu eksekusi lebih singkat dibanding MPI karena penggabungan *hash map* di memori bersama jauh lebih ringan daripada biaya serialisasi, deserialisasi, dan *message passing* (`MPI_Send`/`MPI_Recv`) ke Rank 0 pada MPI.
+- **H4 (Titik Jenuh Speedup Non-Linear):** Kurva *speedup* tidak akan mencapai batas linear ideal dan persentase efisiensi akan menurun seiring bertambahnya *worker*. Kenaikan performa paling tajam diperkirakan terjadi pada skala 2 hingga 8 *thread* (memanfaatkan 8 Performance Core), kemudian mulai melandai pada 16 *thread* akibat batasan disk I/O pada 28.752 file, porsi serial saat agregasi global (Hukum Amdahl), serta mulai terlibatnya Efficiency Core yang memiliki *clock speed* lebih rendah.
+
+---
+
 ## 📚 Karakteristik Dataset PG-19 (Project Gutenberg)
 
 Dataset yang digunakan secara penuh dalam pengujian akhir adalah **The PG-19 Language Modeling Benchmark Dataset** (DeepMind / Bojan Tunguz, Kaggle), yang bersumber dari korpus buku digital domain publik Project Gutenberg terbitan sebelum tahun 1919. Seluruh partisi (`train`, `test`, dan `validation`) dikonsolidasikan ke dalam direktori tunggal:
